@@ -1,7 +1,10 @@
 var GitHubApi = require('github');
 var config = require('./config.json');
 
-var github = new GitHubApi({
+var active = false,
+    repos = [{ 'user': 'johnballantyne', 'repo': 'test' }],
+    rate = 60 * 60 * 1000 / (60 * repos.length),
+    github = new GitHubApi({
     // required
      version: '3.0.0',
     //optional
@@ -20,11 +23,13 @@ github.authenticate({
 
 function calcRate(reqRem, reset) {
     var timeRem = reset * 1000 - Date.now();
-
     return Math.round(timeRem / reqRem);
 }
 
-function getCommits(repos, rate, callback) {
+function getCommits() {
+    if (!active) {
+        return;
+    }
     github.repos.getCommits(
         {
             'user': repos[0].user,
@@ -52,24 +57,13 @@ function getCommits(repos, rate, callback) {
                 console.log('    Rate: 1 request per %s seconds', rate / 1000);
                 console.log('    Requests remaining: %s', reqRem);
                 console.log('    Request count resets in %s minutes', ((reset * 1000 - Date.now()) / 60000).toFixed(1));
-                setTimeout(function () { callback(repos, rate); }, rate);
+                setTimeout(function () { getCommits(); }, rate);
             }
         }
     );
 }
 
-function poll(repos, rate) {
-    getCommits(repos, rate, poll);
-}
-
-function init() {
-    var repos = [
-            { 'user': 'johnballantyne', 'repo': 'test' }
-        ],
-        rate = 3600000 / (60 * repos.length);
-    poll(repos, 0);
-}
-
-
-init();
-
+module.exports.getCommits = getCommits;
+module.exports.repos = repos;
+module.exports.rate = rate;
+module.exports.active = active;
