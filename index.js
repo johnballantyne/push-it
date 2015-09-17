@@ -1,4 +1,5 @@
 var GitHubApi = require('github');
+var config = require('./config.json');
 
 var github = new GitHubApi({
     // required
@@ -10,6 +11,11 @@ var github = new GitHubApi({
     headers: {
         'user-agent': 'push-it'
     }
+});
+
+github.authenticate({
+    type: "token",
+    token: config.authToken
 });
 
 function calcRate(reqRem, reset) {
