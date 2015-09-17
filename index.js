@@ -27,8 +27,8 @@ function calcRate(reqRem, reset) {
 function getCommits(repos, rate, callback) {
     github.repos.getCommits(
         {
-            'user': 'johnballantyne',
-            'repo': 'fbhw',
+            'user': repos[0].user,
+            'repo': repos[0].repo,
             'page': '1',
             'per_page': '1'
         },
@@ -37,6 +37,13 @@ function getCommits(repos, rate, callback) {
                 console.log(err);
                 //callback(repos, rate);
             } else {
+                if (!repos[0].sha) {
+                    console.log("Commit not set for %s/%s. Initializing...", repos[0].user, repos[0].repo);
+                    repos[0].sha = data[0].sha;
+                } else if (repos[0].sha !== data[0].sha) {
+                    console.log("ALERT!!! A NEW COMMIT! HIT IT SPINDERELLA");
+                    repos[0].sha = data[0].sha;
+                }
                 var reqRem = data.meta['x-ratelimit-remaining'],
                     reset = data.meta['x-ratelimit-reset'];
 
@@ -57,7 +64,7 @@ function poll(repos, rate) {
 
 function init() {
     var repos = [
-            { 'user': 'johnballantyne', 'repo': 'fbhw' }
+            { 'user': 'johnballantyne', 'repo': 'test' }
         ],
         rate = 3600000 / (60 * repos.length);
     poll(repos, 0);
