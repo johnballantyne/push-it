@@ -10,7 +10,7 @@ body {
     z-index: -100;
 }
 
-#video-bg > video {
+#bigvid {
     position: absolute;
     top: 0;
     left: 0;
