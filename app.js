@@ -6,20 +6,19 @@ var pushitio = io.of('/push-it');
 var github = require('./github');
 
 app.use(express.static('public'));
-// TODO: Dynamic URIs
-app.get('/johnballantyne/fbhw', function (req, res) {
+
+app.get('/', function (req, res) {
     res.sendFile('index.html', { 'root': __dirname + '/public/' });
 });
 
-app.get('/dw', function (req, res) {
-    res.download(__dirname + '/public/doctor_who_2005.9x01.the_magicians_apprentice.720p_hdtv_x264-fov.mkv');
+app.get(/w/, function (req, res) {
+    res.sendFile('push-it.html', { 'root': __dirname + '/public/' });
 });
 var clients = {};
 
 function updateClients(clientData) {
     pushitio.emit('clients update', clients);
 }
-
 
 pushitio.on('connection', function(socket){
     github.setActive(true);
