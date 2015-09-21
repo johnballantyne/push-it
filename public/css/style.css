@@ -15,6 +15,11 @@ body {
     -webkit-filter: blur(32px);
 }
 
+.not-found {
+    -webkit-filter: blur(32px)
+                    invert(75%);
+}
+
 #bigvid {
     position: absolute;
     top: 0;

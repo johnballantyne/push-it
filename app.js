@@ -7,6 +7,7 @@ var github = require('./github');
 
 app.use(express.static('public'));
 
+
 app.get('/', function (req, res) {
     res.sendFile('index.html', { 'root': __dirname + '/public/' });
 });
@@ -14,6 +15,10 @@ app.get('/', function (req, res) {
 // Match: /[word]/[word] or /[word]/[word]/
 app.get(/^\/\w+\/\w+\/?$/, function (req, res) {
     res.sendFile('push-it.html', { 'root': __dirname + '/public/' });
+});
+
+app.use(function(req, res, next) {
+    res.status(404).sendFile('404.html', { 'root': __dirname + '/public/' });
 });
 var clients = {};
 
