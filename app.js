@@ -11,7 +11,8 @@ app.get('/', function (req, res) {
     res.sendFile('index.html', { 'root': __dirname + '/public/' });
 });
 
-app.get(/w/, function (req, res) {
+// Match: /[word]/[word] or /[word]/[word]/
+app.get(/^\/\w+\/\w+\/?$/, function (req, res) {
     res.sendFile('push-it.html', { 'root': __dirname + '/public/' });
 });
 var clients = {};
