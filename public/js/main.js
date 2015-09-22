@@ -1,11 +1,25 @@
 var socket = io('/push-it');
 var fingerprint2str;
 var vid = document.getElementById('bigvid');
+var bg = document.getElementsByClassName('push-it')[0];
 var clients = [];
 
 fingerprint2str = localStorage.getItem('fingerprint2');
 var uri = document.createElement('a');
 uri.href = document.URL;
+
+if (bg !== null) {
+    bg.addEventListener('click', function () {
+        resetVid();
+    }, false);
+}
+
+function resetVid() {
+    vid.pause();
+    vid.currentTime = 0;
+    vid.muted = false;
+    vid.style.visibility = "inherit";
+}
 
 socket.on('connect', function () {
     console.log('Firing. Room: %s', uri.pathname);
@@ -32,10 +46,7 @@ socket.on('disconnect', function () {
 
 socket.on('push it', function (data) {
     console.log('Pushed.');
-    vid.pause();
-    vid.currentTime = 0;
-    vid.muted = false;
-    vid.style.visibility = "inherit";
+    resetVid();
     vid.play();
 });
 

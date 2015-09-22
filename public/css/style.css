@@ -20,6 +20,9 @@ body {
                     invert(75%);
 }
 
+.push-it {
+}
+
 #bigvid {
     position: absolute;
     top: 0;
