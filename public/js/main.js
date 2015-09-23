@@ -41,9 +41,6 @@ socket.on('connect', function () {
     }
 });
 
-socket.on('disconnect', function () {
-});
-
 socket.on('push it', function (data) {
     console.log('Pushed.');
     resetVid();
