@@ -1,6 +1,10 @@
-body {
-    padding: 0;
+html, body {
+    height: 100%;
     margin: 0;
+    padding: 0;
+}
+
+body {
     background-color: #000;
 }
 
@@ -30,5 +34,117 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+#big-text {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#big-text h1, #big-text h2 {
+    flex: 0 1 auto;
+    font-family: Impact;
+    text-shadow: 1px 1px #f7d43e, 
+                 2px 2px #f5d23e, 
+                 3px 3px #f3d13d,
+                 4px 4px #f2cf3c,
+                 5px 5px #efcd3c,
+                 6px 6px #edca3b,
+                 7px 7px #e9c83b, 
+                 8px 8px #e6c63a,
+                 9px 9px #e4c439,
+                 10px 10px #e2c138,
+                 11px 11px #dfbf38,
+                 12px 12px #debe37;
+    text-align: center;
+    color: #ba252f;
+    margin: 0 auto 0 auto;
+    text-transform: uppercase;
+}
+
+h1 { 
+    font-size: 16vw;
+    animation: pulse1 2.166s cubic-bezier(0, 1, 0, 1) infinite normal,
+               move1 2.166s cubic-bezier(0, 1, 0, 1) infinite normal;
+}
+h2 {
+    font-size: 11vw;
+    animation: pulse2 2.166s cubic-bezier(0, 1, 0, 1) infinite normal,
+               move2 2.166s cubic-bezier(0, 1, 0, 1) infinite normal;
+}
+
+@keyframes pulse1 {
+    0%, 8%, 50%, 58% {
+    text-shadow: 1px 1px #f7d43e, 
+                 2px 2px #f5d23e, 
+                 3px 3px #f3d13d,
+                 4px 4px #f2cf3c,
+                 5px 5px #efcd3c,
+                 6px 6px #edca3b,
+                 7px 7px #e9c83b, 
+                 8px 8px #e6c63a,
+                 9px 9px #e4c439,
+                 10px 10px #e2c138,
+                 11px 11px #dfbf38,
+                 12px 12px #debe37;    
+    }
+    4%, 54% {
+    text-shadow: 1px 1px #efcd3c,
+                 2px 2px #edca3b,
+                 3px 3px #e9c83b, 
+                 4px 4px #e6c63a,
+                 5px 5px #e4c439,
+                 6px 6px #e2c138,
+                 7px 7px #dfbf38,
+                 8px 8px #debe37;
+    }
+}
+
+@keyframes pulse2 {
+    9%, 19%, 29% {
+    text-shadow: 1px 1px #f7d43e, 
+                 2px 2px #f5d23e, 
+                 3px 3px #f3d13d,
+                 4px 4px #f2cf3c,
+                 5px 5px #efcd3c,
+                 6px 6px #edca3b,
+                 7px 7px #e9c83b, 
+                 8px 8px #e6c63a,
+                 9px 9px #e4c439,
+                 10px 10px #e2c138,
+                 11px 11px #dfbf38,
+                 12px 12px #debe37;   
+    }
+    14%, 24% {
+    text-shadow: 1px 1px #efcd3c,
+                 2px 2px #edca3b,
+                 3px 3px #e9c83b, 
+                 4px 4px #e6c63a,
+                 5px 5px #e4c439,
+                 6px 6px #e2c138,
+                 7px 7px #dfbf38,
+                 8px 8px #debe37;
+    }
+}
+
+@keyframes move1 {
+    0%, 8%, 50%, 58% {
+        transform: translate(0, 0);
+    }
+    4%, 54% {
+        transform: translate(4px, 4px);
+    }
+}
+
+@keyframes move2 {
+    9%, 19%, 29% {
+        transform: translate(0, 0);
+    }
+    14%, 24% {
+        transform: translate(4px, 4px);
+    }
 }
 
