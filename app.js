@@ -22,8 +22,8 @@ app.use(function(req, res, next) {
 });
 var clients = {};
 
-function updateClients(clientData) {
-    pushitio.emit('clients update', clients);
+function clientsInRoom(nsp, room) {
+    return Object.keys(io.of(nsp).adapter.rooms[room]).length;
 }
 
 pushitio.on('connection', function(socket){
@@ -35,9 +35,11 @@ pushitio.on('connection', function(socket){
     socket.on('client connected', function (data) {
         console.log('Joining: %s', data.room);
         socket.join(data.room);
-        console.log('Our rooms: %s', pushitio.rooms);
-        updateClients(data);
-        console.log("clients: " + clients);
+        console.log('%s clients in room %s', clientsInRoom('/push-it', data.room), data.room);
+        console.log('%s roster:', data.room);
+        for (var id in io.of('/push-it').adapter.rooms[data.room]) {
+            console.log("    Client:" + io.of('/push-it').adapter.nsp.connected[id]);
+        };
     });
 
     socket.on('disconnect', function (data) {
