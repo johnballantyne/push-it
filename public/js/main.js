@@ -8,7 +8,7 @@ fingerprint2str = localStorage.getItem('fingerprint2');
 var uri = document.createElement('a');
 uri.href = document.URL;
 
-if (bg !== null) {
+if (bg) {
     bg.addEventListener('click', function () {
         resetVid();
     }, false);
@@ -22,7 +22,7 @@ function resetVid() {
 }
 
 socket.on('connect', function () {
-    console.log('Firing. Room: %s', uri.pathname);
+    console.log('socket.io connected. Pathname: %s', uri.pathname);
     if (!localStorage.getItem('fingerprint2')) {
         console.log('No Fingerprint found. Setting...');
         new Fingerprint2().get(function (result) {
@@ -34,10 +34,13 @@ socket.on('connect', function () {
             });
         });
     } else {
-        socket.emit('client connected', {
-            'fp2str': fingerprint2str,
-            'room': uri.pathname
-        });
+        if (uri.pathname.match(/^\/\w+\/\w+\/?/)) {
+            console.log('Valid room. Connecting');
+            socket.emit('client connected', {
+                'fp2str': fingerprint2str,
+                'room': uri.pathname
+            });
+        }
     }
 });
 
