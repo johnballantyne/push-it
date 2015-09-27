@@ -23,7 +23,12 @@ app.use(function(req, res, next) {
 var clients = {};
 
 function clientsInRoom(nsp, room) {
-    return Object.keys(io.of(nsp).adapter.rooms[room]).length;
+    var clients = io.of(nsp).adapter.rooms[room];
+    if (clients) {
+        return Object.keys(clients).length;
+    } else {
+        return 0;
+    }
 }
 
 pushitio.on('connection', function(socket){
