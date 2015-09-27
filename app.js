@@ -32,7 +32,6 @@ function clientsInRoom(nsp, room) {
 }
 
 function totalClients() {
-    console.log('Number of rooms: %s', totalRooms());
     return Object.keys(pushitio.connected).length;
 }
 
@@ -42,7 +41,6 @@ function totalClients() {
 function totalRooms() {
     var availableRooms = [];
     var rooms = pushitio.adapter.rooms;
-    console.log(JSON.stringify(rooms)); 
     if (rooms) {
         for (var room in rooms) {
             if (!rooms[room].hasOwnProperty(room)) {
@@ -66,9 +64,9 @@ pushitio.on('connection', function(socket){
             return;
         }
 
-
         console.log('Joining: %s', data.room);
         socket.join(data.room);
+        console.log('Number of rooms: %s', totalRooms());
         console.log('Total clients: %s', totalClients());
         console.log('%s clients in room %s', clientsInRoom('/push-it', data.room), data.room);
         console.log('%s roster:', data.room);
