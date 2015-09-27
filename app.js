@@ -31,6 +31,28 @@ function clientsInRoom(nsp, room) {
     }
 }
 
+function totalClients() {
+    console.log('Number of rooms: %s', totalRooms());
+    return Object.keys(pushitio.connected).length;
+}
+
+/*********************************************
+ * http://stackoverflow.com/a/31210008/1832306
+ *********************************************/
+function totalRooms() {
+    var availableRooms = [];
+    var rooms = pushitio.adapter.rooms;
+    console.log(JSON.stringify(rooms)); 
+    if (rooms) {
+        for (var room in rooms) {
+            if (!rooms[room].hasOwnProperty(room)) {
+            availableRooms.push(room);
+            }
+        }
+    }
+    return availableRooms.length;
+}
+
 pushitio.on('connection', function(socket){
     github.setActive(true);
     github.getCommits(function annoyEveryone() {
@@ -38,13 +60,16 @@ pushitio.on('connection', function(socket){
     });
 
     socket.on('client connected', function (data) {
-        if (data.room.match(/^\/\w+\/\w+\/?/)) {
+        if (!data.room.match(/^\/\w+\/\w+\/?/)) {
+            console.log(data.room);
             console.log('Someone probably tinkered with the client side code');
             return;
         }
 
+
         console.log('Joining: %s', data.room);
         socket.join(data.room);
+        console.log('Total clients: %s', totalClients());
         console.log('%s clients in room %s', clientsInRoom('/push-it', data.room), data.room);
         console.log('%s roster:', data.room);
         for (var id in io.of('/push-it').adapter.rooms[data.room]) {
@@ -53,7 +78,9 @@ pushitio.on('connection', function(socket){
     });
 
     socket.on('disconnect', function (data) {
-        github.setActive(false);
+        if (!totalRooms()) {
+            github.setActive(false);
+        }
     });
 });
 
