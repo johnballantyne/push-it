@@ -39,7 +39,7 @@ function totalClients() {
 /*********************************************
  * http://stackoverflow.com/a/31210008/1832306
  *********************************************/
-function totalRepoRooms() {
+function totalRooms() {
     var availableRooms = [];
     var rooms = pushitio.adapter.rooms;
     console.log(JSON.stringify(rooms)); 
@@ -78,7 +78,7 @@ pushitio.on('connection', function(socket){
     });
 
     socket.on('disconnect', function (data) {
-        if (!totalRepoRooms()) {
+        if (!totalRooms()) {
             github.setActive(false);
         }
     });
