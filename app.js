@@ -38,6 +38,11 @@ pushitio.on('connection', function(socket){
     });
 
     socket.on('client connected', function (data) {
+        if (data.room.match(/^\/\w+\/\w+\/?/)) {
+            console.log('Someone probably tinkered with the client side code');
+            return;
+        }
+
         console.log('Joining: %s', data.room);
         socket.join(data.room);
         console.log('%s clients in room %s', clientsInRoom('/push-it', data.room), data.room);
