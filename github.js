@@ -2,8 +2,9 @@ var GitHubApi = require('github');
 var config = require('./config.json');
 
 var active = false,
-    repos = [{ 'user': 'johnballantyne', 'repo': 'test' }],
-    rate = 60 * 60 * 1000 / (60 * repos.length),
+    validRepos = [{ 'user': 'johnballantyne', 'repo': 'fbhw' }],
+    invalidRepos = [{ 'user': 'johnballantyne', 'repo': 'test' }],
+    rate = 60 * 60 * 1000 / (60 * validRepos.length),
     github = new GitHubApi({
     // required
      version: '3.0.0',
@@ -17,7 +18,7 @@ var active = false,
 });
 
 github.authenticate({
-    type: "token",
+    type: 'token',
     token: config.authToken
 });
 
@@ -34,45 +35,71 @@ function setActive(val) {
     }
 }
 
+function checkValidRepos() {
+
+}
+
+function checkInvalidRepos() {
+    invalidRepos.forEach(function (repo, i, arr) {
+        github.repos.getCommits(
+            {
+                'user': repo[i].user,
+                'repo': repo[i].repo,
+                'page': '1',
+                'per_page': '1'
+            },
+            function (err, data) {
+                if (err) {
+                    console.log('%s/%s: still inactive.');
+                } else {
+                    console.log('%s/%s: no longer inactive! Suggest switching.');
+                }
+            });
+    });
+}
+
+function handleValidRepo(err, data, action) {
+    if (err) {
+        console.log('Error! You should make this repo inactive.');
+        console.log(err);
+        //callback(validRepos, rate);
+    } else {
+        if (!validRepos[0].sha) {
+            console.log('Commit not set for %s/%s. Initializing...', validRepos[0].user, validRepos[0].repo);
+            validRepos[0].sha = data[0].sha;
+        } else if (validRepos[0].sha !== data[0].sha) {
+            console.log('ALERT!!! A NEW COMMIT! HIT IT SPINDERELLA');
+            action();
+            validRepos[0].sha = data[0].sha;
+        }
+        var reqRem = data.meta['x-ratelimit-remaining'],
+            reset = data.meta['x-ratelimit-reset'];
+
+        rate = calcRate(reqRem, reset);
+        console.log(new Date().toUTCString());
+        console.log('    Rate: 1 request per %s seconds', rate / 1000);
+        console.log('    Requests remaining: %s', reqRem);
+        console.log('    Request count resets in %s minutes', ((reset * 1000 - Date.now()) / 60000).toFixed(1));
+    }
+    setTimeout(function () { getCommits(action); }, rate);
+}
+
 function getCommits(action) {
     if (!active) {
         return;
     }
     github.repos.getCommits(
         {
-            'user': repos[0].user,
-            'repo': repos[0].repo,
+            'user': validRepos[0].user,
+            'repo': validRepos[0].repo,
             'page': '1',
             'per_page': '1'
-        },
-        function (err, data) {
-            if (err) {
-                console.log(err);
-                //callback(repos, rate);
-            } else {
-                if (!repos[0].sha) {
-                    console.log("Commit not set for %s/%s. Initializing...", repos[0].user, repos[0].repo);
-                    repos[0].sha = data[0].sha;
-                } else if (repos[0].sha !== data[0].sha) {
-                    console.log("ALERT!!! A NEW COMMIT! HIT IT SPINDERELLA");
-                    action();
-                    repos[0].sha = data[0].sha;
-                }
-                var reqRem = data.meta['x-ratelimit-remaining'],
-                    reset = data.meta['x-ratelimit-reset'];
-
-                rate = calcRate(reqRem, reset);
-                console.log(new Date().toUTCString());
-                console.log('    Rate: 1 request per %s seconds', rate / 1000);
-                console.log('    Requests remaining: %s', reqRem);
-                console.log('    Request count resets in %s minutes', ((reset * 1000 - Date.now()) / 60000).toFixed(1));
-                setTimeout(function () { getCommits(action); }, rate);
-            }
-        }
-    );
+        }, function (err, data) {
+            handleValidRepo(err, data, action);
+        });
 }
 
-exports.repos = repos;
+exports.validRepos = validRepos;
 exports.rate = rate;
 exports.active = active;
 exports.setActive = setActive;
