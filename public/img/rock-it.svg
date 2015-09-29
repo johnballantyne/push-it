@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     viewBox="0 0 128 128" style="enable-background:new 0 0 128 128;" xml:space="preserve" onload="init(evt)">
+<style type="text/css">
+    .st0{fill:none;stroke:#000000;stroke-width:8;stroke-linecap:round;stroke-miterlimit:10;}
+</style>
+<script type="text/ecmascript">
+    var lines,
+        pulseInt,
+        decay;
+
+    function init(evt) {
+        lines = evt.target.ownerDocument.getElementsByClassName('st0');;
+        decay = 0.5
+    }
+
+    function startAnim() {
+        pulse();
+        setInterval(function () { 
+            clearTimeout(pulseInt);
+            pulse();
+        }, 916);
+
+        setInterval(function () {
+            lines[1].setAttribute('y1', '72');
+            lines[1].setAttribute('y2', '56');
+
+            lines[5].setAttribute('y1', '72');
+            lines[5].setAttribute('y2', '56');
+        }, 458);
+    }
+
+    function pulse() {
+        lines[0].setAttribute('y1', '68');
+        lines[0].setAttribute('y2', '60');
+
+        lines[1].setAttribute('y1', '72');
+        lines[1].setAttribute('y2', '56');
+
+        lines[2].setAttribute('y1', '88');
+        lines[2].setAttribute('y2', '40');
+
+        lines[3].setAttribute('y1', '96');
+        lines[3].setAttribute('y2', '32');
+
+        lines[4].setAttribute('y1', '88');
+        lines[4].setAttribute('y2', '40');
+
+        lines[5].setAttribute('y1', '72');
+        lines[5].setAttribute('y2', '56');
+
+        lines[6].setAttribute('y1', '68');
+        lines[6].setAttribute('y2', '60');
+        shrink();
+    }
+
+    function shrink() {
+        pulseInt = setInterval(function () {
+            for (var i = 0; lines.length > i; i++) {
+                var el = lines[i];
+                var y1 = el.getAttribute('y1');
+                var y2 = el.getAttribute('y2');
+                var newY1 = +y1 - decay;
+                var newY2 = +y2 + decay;
+
+                if (64 > newY1) {
+                    el.setAttribute('y1', '64');
+                    el.setAttribute('y2', '64');
+                } else {
+                    el.setAttribute('y1', newY1);
+                    el.setAttribute('y2', newY2);
+                }
+            }
+        }, 20);
+    }
+</script>
+<line class="st0" x1="4" y1="64" x2="4" y2="64"/>
+<line class="st0" x1="24" y1="64" x2="24" y2="64"/>
+<line class="st0" x1="44" y1="64" x2="44" y2="64"/>
+<line class="st0" x1="64" y1="64" x2="64" y2="64"/>
+<line class="st0" x1="84" y1="64" x2="84" y2="64"/>
+<line class="st0" x1="104" y1="64" x2="104" y2="64"/>
+<line class="st0" x1="124" y1="64" x2="124" y2="64"/>
+</svg>
+
